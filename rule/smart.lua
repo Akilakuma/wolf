@@ -1,6 +1,10 @@
 smart={}
 
 smart.parser_string = function(para)
-    local a = para .. " is smart!"
-    return a
+
+--     使用golang提供的method
+    local inm = require("inmodule")
+    local json_value = inm.gjson(para, "number")
+
+    return json_value
 end

@@ -1,13 +1,30 @@
 package main
 
 import (
+	"github.com/tidwall/gjson"
 	lua "github.com/yuin/gopher-lua"
 )
 
 // 給lua 呼叫的 function
 var exports = map[string]lua.LGFunction{
-	//"get_random_by_probability": LuaGetRandomByProbability,
-	//"split":                     LuaSplit,
+	"gjson": LuaGJsonFindKey,
+}
+
+// LuaGJsonFindKey 利用gjson，找出json key
+func LuaGJsonFindKey(l *lua.LState) int {
+
+	// 取出lua第一個參數
+	source := string(l.ToString(1))
+	// 取出lua第二個參數
+	key := string(l.ToString(2))
+
+	jsonValue := gjson.Get(source, key)
+	v := jsonValue.String()
+
+	// 轉成lua的型態後，塞回去
+	l.Push(lua.LString(v))
+
+	return 1
 }
 
 type lStatePool struct {
